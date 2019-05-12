@@ -1,0 +1,30 @@
+{
+  "name": "crucible-scraper",
+  "version": "0.10.0",
+  "description": "use crucible rest api to collect review info",
+  "main": "server.js",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.4",
+    "mongoose": "^5.5.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kboronka/crucible-scraper.git"
+  },
+  "keywords": [
+    "crucible",
+    "rest-api"
+  ],
+  "author": "kboronka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kboronka/crucible-scraper/issues"
+  },
+  "homepage": "https://github.com/kboronka/crucible-scraper#readme"
+}
