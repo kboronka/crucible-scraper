@@ -9,6 +9,6 @@
     "preLaunchTask": "build-babel",
     "name": "Debug",
     "program": "${workspaceRoot}/src/server.js",
-    "outFiles": ["${workspaceRoot}/dist/**/*.js"]
+    "outFiles": ["${workspaceRoot}/.compile/**/*.js"]
   }]
 }

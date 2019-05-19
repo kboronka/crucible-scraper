@@ -5,16 +5,15 @@ module.exports = {
   getReviews: function(crucibleApiUrl, callback) {
     axios.get(urljoin(crucibleApiUrl, '/reviews-v1/filter/allOpenReviews'), {
         auth: {
-          username: 'janedoe',
-          password: 's00pers3cret'
+          username: 'admin',
+          password: 'password'
         }
       })
       .then((res) => {
-        callback(null, res.body);
+        callback(null, res.data);
       })
       .catch((error) => {
-        console.log(error.body);
-        callback(error.body, null);
+        callback(error.message, null);
       })
   }
 }
