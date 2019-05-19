@@ -3,28 +3,44 @@ import urljoin from 'url-join';
 import settings from './config/config';
 import Review from './models/review.model';
 
+var newReviewCallbacks = [];
+
 function pollReviews() {
+  console.log('\n\npolling...');
   getOpenReviews((err, reviewData) => {
     if (err) {
       setTimeout(pollReviews, 60000);
     } else {
       if (reviewData) {
+        var promises = [];
+
         reviewData.forEach(review => {
-          saveReview(review, (err, updated, inserted) => {
-            if (err) {
-              console.log(err);
-            } else if (inserted) {
-              console.log(`created ${review.permaId.id}`);
-            } else {
-              console.log(`updated ${review.permaId.id}`);
-            }
-
-          });
+          promises.push(new Promise((resolve, reject) =>
+            saveReview(review, (err, updated, inserted) => {
+              if (err) {
+                console.log(err);
+                reject(err);
+              } else if (inserted) {
+                emitNewReview(inserted);
+                resolve(inserted.permaId);
+              } else {
+                resolve(updated.permaId);
+              }
+            })
+          ));
         });
+
+        Promise.all(promises)
+          .then(values => {
+            console.log(values);
+            console.log('polling again in 5s');
+            setTimeout(pollReviews, 5000);
+          })
+          .catch(err => {
+            console.log('polling again in 5s');
+            setTimeout(pollReviews, 60000);
+          });
       }
-
-      setTimeout(pollReviews, 25000);
-
     }
   });
 }
@@ -158,11 +174,10 @@ function saveReview(review, callback) {
           Review.upsertReview(newReview, (err, success) => {
             if (err) {
               callback(err, null, null);
-            } else if (success.nModified == 0 &&
-              success.upserted) {
-              callback(null, null, true);
+            } else if (success.nModified == 0 && success.upserted) {
+              callback(null, null, newReview);
             } else {
-              callback(null, true, null);
+              callback(null, newReview, null);
             }
           });
         }
@@ -170,13 +185,21 @@ function saveReview(review, callback) {
     }
   });
 
+}
 
+function registerNewReviewCallback(callback) {
+  newReviewCallbacks.push(callback);
+}
 
-
+function emitNewReview(review) {
+  newReviewCallbacks.forEach(callback => {
+    callback(review);
+  });
 }
 
 module.exports = {
   getOpenReviews: getOpenReviews,
+  registerNewReviewCallback: registerNewReviewCallback,
   pollOpenReviews: function(callback) {
     findAllReviews((err, reviews) => {
       if (err) {
