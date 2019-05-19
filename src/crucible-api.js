@@ -158,19 +158,29 @@ function saveReview(review, callback) {
     },
     createDate: review.createDate,
     dueDate: review.dueDate,
-    hasDefects: true,
-    isComplete: false,
+    hasDefects: false,
+    isComplete: true,
     reviewers: []
   }
 
   getComments(newReview.permaId, (err, comments) => {
     if (err) {
-      console.log(err);
+      callback(err, null, null);
     } else {
+      comments.forEach(comment => {
+        if (!comment.draft && !comment.deleted) {
+          newReview.hasDefects |= comment.defectRaised && !comment.defectApproved;
+        }
+      });
+
       getReviewers(newReview.permaId, (err, reviewers) => {
         if (err) {
-          console.log(err);
+          callback(err, null, null);
         } else {
+          reviewers.forEach(reviewer => {
+            newReview.isComplete &= reviewer.completed;
+          });
+
           Review.upsertReview(newReview, (err, success) => {
             if (err) {
               callback(err, null, null);
