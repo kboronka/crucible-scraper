@@ -1,6 +1,6 @@
 import axios from 'axios';
 import urljoin from 'url-join';
-import config from './config/config.x';
+import config from './config/config';
 
 function pollReviews() {
   console.log('poll reviews - ' + config.crucibleUrl);
@@ -18,8 +18,8 @@ function pollReviews() {
 function getOpenReviews(callback) {
   axios.get(urljoin(config.crucibleUrl, '/reviews-v1/filter/allOpenReviews'), {
       auth: {
-        username: 'admin',
-        password: 'password'
+        username: config.username,
+        password: config.password
       }
     })
     .then((res) => {
