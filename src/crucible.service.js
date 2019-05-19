@@ -4,12 +4,12 @@ import settings from './config/config';
 import Review from './models/review.model';
 
 var newReviewCallbacks = [];
+var closedReviewCallbacks = [];
 
 function pollReviews() {
   const timeoutAfterError = 15 * 60 * 1000; // 15 minutes
   const timeoutAfterSuccess = 30 * 1000; // 30 seconds
 
-  console.log('\n\npolling...');
   getOpenReviews((err, reviewData) => {
     if (err) {
       setTimeout(pollReviews, timeoutAfterError);
@@ -19,13 +19,16 @@ function pollReviews() {
 
         reviewData.forEach(review => {
           promises.push(new Promise((resolve, reject) =>
-            saveReview(review, (err, updated, inserted) => {
+            saveReview(review, (err, inserted, updated, closed) => {
               if (err) {
                 reject(err);
+              } else if (closed) {
+                emitReviewClosed(closed);
+                resolve(closed.permaId)
               } else if (inserted) {
-                emitNewReview(inserted);
+                emitReviewInserted(inserted);
                 resolve(inserted.permaId);
-              } else {
+              } else if (updated) {
                 resolve(updated.permaId);
               }
             })
@@ -193,11 +196,11 @@ function saveReview(review, callback) {
 
           Review.upsertReview(newReview, (err, success) => {
             if (err) {
-              callback(err, null, null);
+              callback(err, null, null, null);
             } else if (success.nModified == 0 && success.upserted) {
-              callback(null, null, newReview);
+              callback(null, newReview, null, null);
             } else {
-              callback(null, newReview, null);
+              callback(null, null, newReview, null);
             }
           });
         }
@@ -207,29 +210,32 @@ function saveReview(review, callback) {
 
 }
 
-function registerNewReviewCallback(callback) {
+function registerReviewInsertedCallback(callback) {
   newReviewCallbacks.push(callback);
 }
 
-function emitNewReview(review) {
+function emitReviewInserted(review) {
   newReviewCallbacks.forEach(callback => {
     callback(review);
   });
 }
 
-module.exports = {
-  getOpenReviews: getOpenReviews,
-  registerNewReviewCallback: registerNewReviewCallback,
-  pollOpenReviews: function(callback) {
-    findAllReviews((err, reviews) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(reviews);
-      }
+function registerReviewClosedCallback(callback) {
+  closedReviewCallbacks.push(callback);
+}
 
-      setTimeout(pollReviews, 1000);
-      callback();
-    });
-  }
+function emitReviewClosed(review) {
+  closedReviewCallbacks.forEach(callback => {
+    callback(review);
+  });
+}
+
+module.exports = {
+  registerReviewInsertedCallback: registerReviewInsertedCallback,
+  registerReviewClosedCallback: registerReviewClosedCallback,
+  pollOpenReviews: function(callback) {
+    setTimeout(pollReviews, 1000);
+    callback();
+  });
+}
 }

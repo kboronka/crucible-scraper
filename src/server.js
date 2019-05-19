@@ -15,7 +15,7 @@ const connection = mongoose.connection;
 
 connection.once('open', () => {
   console.log(`connected to ${config.database}`);
-  crucible.registerNewReviewCallback(newReviewCreated);
+  crucible.registerReviewInsertedCallback(newReviewCreated);
   crucible.pollOpenReviews(() => console.log('polling open reviews'));
 });
 
