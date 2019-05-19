@@ -3,13 +3,10 @@ import urljoin from 'url-join';
 import config from './config/config';
 
 function pollReviews() {
-  console.log('poll reviews - ' + config.crucibleUrl);
-
   getOpenReviews((err, reviewData) => {
     if (err) {
       setTimeout(pollReviews, 60000);
     } else {
-      console.log(reviewData);
       setTimeout(pollReviews, 5000);
     }
   });
@@ -30,7 +27,7 @@ function getOpenReviews(callback) {
     .catch((error) => {
       console.log('getOpenReviews error: ' + error.message);
       callback(error.message, null);
-    })
+    });
 }
 
 module.exports = {
