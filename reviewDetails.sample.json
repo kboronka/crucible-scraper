@@ -49,13 +49,202 @@
     ]
   },
   "reviewItems": {
-    "reviewItem": []
+    "reviewItem": [
+      {
+        "permId": {
+          "id": "CFR-1"
+        },
+        "participants": [
+          {
+            "user": {
+              "userName": "lad",
+              "displayName": "lad",
+              "avatarUrl": "http://msedgewin10:8060/avatar/lad?s=48",
+              "url": "/user/lad"
+            },
+            "completed": false
+          },
+          {
+            "user": {
+              "userName": "james",
+              "displayName": "james",
+              "avatarUrl": "http://msedgewin10:8060/avatar/james?s=48",
+              "url": "/user/james"
+            },
+            "completed": false
+          },
+          {
+            "user": {
+              "userName": "admin",
+              "displayName": "admin",
+              "avatarUrl": "http://msedgewin10:8060/avatar/admin?s=48",
+              "url": "/user/admin"
+            },
+            "completed": true
+          }
+        ],
+        "repositoryName": "UPLOAD:2",
+        "fromPath": "",
+        "fromRevision": "",
+        "toPath": "das-build.jpg",
+        "toRevision": "1",
+        "toContentUrl": "/cru/CR-2/rawcontent/1/das-build.jpg",
+        "fileType": "File",
+        "commitType": "Added",
+        "authorName": "admin",
+        "showAsDiff": false,
+        "commitDate": 1558288115170,
+        "expandedRevisions": [
+          {
+            "addDate": 1558288115234,
+            "revision": "1",
+            "path": "das-build.jpg",
+            "contentUrl": "/cru/CR-2/rawcontent/1/das-build.jpg",
+            "source": "UPLOAD:2",
+            "changedLines": 1,
+            "fileType": "File",
+            "commitType": "Added"
+          }
+        ]
+      },
+      {
+        "permId": {
+          "id": "CFR-2"
+        },
+        "participants": [
+          {
+            "user": {
+              "userName": "lad",
+              "displayName": "lad",
+              "avatarUrl": "http://msedgewin10:8060/avatar/lad?s=48",
+              "url": "/user/lad"
+            },
+            "completed": false
+          },
+          {
+            "user": {
+              "userName": "james",
+              "displayName": "james",
+              "avatarUrl": "http://msedgewin10:8060/avatar/james?s=48",
+              "url": "/user/james"
+            },
+            "completed": false
+          },
+          {
+            "user": {
+              "userName": "admin",
+              "displayName": "admin",
+              "avatarUrl": "http://msedgewin10:8060/avatar/admin?s=48",
+              "url": "/user/admin"
+            },
+            "completed": true
+          }
+        ],
+        "repositoryName": "UPLOAD:2",
+        "fromPath": "",
+        "fromRevision": "",
+        "toPath": "reviewDetails.sample.json",
+        "toRevision": "2",
+        "toContentUrl": "/cru/CR-2/rawcontent/2/reviewDetails.sample.json",
+        "fileType": "File",
+        "commitType": "Added",
+        "authorName": "admin",
+        "showAsDiff": false,
+        "commitDate": 1558288149294,
+        "expandedRevisions": [
+          {
+            "addDate": 1558288149295,
+            "revision": "2",
+            "path": "reviewDetails.sample.json",
+            "contentUrl": "/cru/CR-2/rawcontent/2/reviewDetails.sample.json",
+            "source": "UPLOAD:2",
+            "changedLines": 1,
+            "fileType": "File",
+            "commitType": "Added"
+          }
+        ]
+      }
+    ]
   },
   "generalComments": {
-    "comments": []
+    "comments": [
+      {
+        "metrics": {
+          "rank": {
+            "configVersion": 1,
+            "value": "Minor"
+          },
+          "classification": {
+            "configVersion": 1,
+            "value": "Missing"
+          }
+        },
+        "message": "where are the files?",
+        "draft": false,
+        "deleted": false,
+        "defectRaised": true,
+        "defectApproved": false,
+        "readStatus": "READ",
+        "user": {
+          "userName": "admin",
+          "displayName": "admin",
+          "avatarUrl": "http://msedgewin10:8060/avatar/admin?s=48",
+          "url": "/user/admin"
+        },
+        "createDate": "2019-05-19T10:48:06.311-0700",
+        "permaId": {
+          "id": "CMT:1"
+        },
+        "replies": [],
+        "messageAsHtml": "<p>where are the files?</p>",
+        "permId": {
+          "id": "CMT:1"
+        },
+        "parentCommentId": {}
+      }
+    ]
   },
   "versionedComments": {
-    "comments": []
+    "comments": [
+      {
+        "metrics": {
+          "rank": {
+            "configVersion": 1,
+            "value": "Minor"
+          },
+          "classification": {
+            "configVersion": 1,
+            "value": "Risk-prone"
+          }
+        },
+        "message": "in review state",
+        "draft": false,
+        "deleted": false,
+        "defectRaised": true,
+        "defectApproved": false,
+        "readStatus": "READ",
+        "user": {
+          "userName": "admin",
+          "displayName": "admin",
+          "avatarUrl": "http://msedgewin10:8060/avatar/admin?s=48",
+          "url": "/user/admin"
+        },
+        "createDate": 1558288171295,
+        "permaId": "CMT:2",
+        "replies": [],
+        "messageAsHtml": "<p>in review state</p>",
+        "reviewItemId": {
+          "id": "CFR-2"
+        },
+        "toLineRange": "28",
+        "lineRanges": [
+          {
+            "revision": "2",
+            "range": "28"
+          }
+        ]
+      }
+    ]
   },
   "transitions": {
     "transitionData": [
@@ -121,5 +310,15 @@
       }
     ]
   },
-  "stats": []
+  "stats": [
+    {
+      "user": "admin",
+      "published": 2,
+      "drafts": 0,
+      "defects": 2,
+      "unread": 0,
+      "leaveUnread": 0,
+      "read": 2
+    }
+  ]
 }

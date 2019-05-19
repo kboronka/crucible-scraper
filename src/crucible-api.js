@@ -1,6 +1,6 @@
 import axios from 'axios';
 import urljoin from 'url-join';
-import config from './config/config';
+import settings from './config/config';
 
 function pollReviews() {
   getOpenReviews((err, reviewData) => {
@@ -8,20 +8,55 @@ function pollReviews() {
       setTimeout(pollReviews, 60000);
     } else {
       setTimeout(pollReviews, 5000);
+      getReviewDetails('CR-2',
+        (err, details) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('\n\n');
+            console.log(JSON.stringify(details));
+            console.log('\n\n');
+          }
+        }
+      );
     }
   });
 }
 
 function getOpenReviews(callback) {
-  axios.get(urljoin(config.crucibleUrl, '/reviews-v1/filter/allOpenReviews'), {
-      auth: {
-        username: config.username,
-        password: config.password
-      }
-    })
+  var uri = urljoin(settings.crucibleUrl, '/reviews-v1/filter/allOpenReviews');
+  var config = {
+    auth: {
+      username: settings.username,
+      password: settings.password
+    }
+  };
+
+  axios.get(uri, config)
     .then((res) => {
       if (res.data && res.data.reviewData) {
         callback(null, res.data.reviewData);
+      }
+    })
+    .catch((error) => {
+      console.log('getOpenReviews error: ' + error.message);
+      callback(error.message, null);
+    });
+}
+
+function getReviewDetails(id, callback) {
+  var uri = urljoin(settings.crucibleUrl, '/reviews-v1/', id, '/details');
+  var config = {
+    auth: {
+      username: settings.username,
+      password: settings.password
+    }
+  };
+
+  axios.get(uri, config)
+    .then((res) => {
+      if (res.data && res.data) {
+        callback(null, res.data);
       }
     })
     .catch((error) => {
