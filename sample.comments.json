@@ -1,0 +1,72 @@
+[
+  {
+    "metrics": {
+      "rank": {
+        "configVersion": 1,
+        "value": "Minor"
+      },
+      "classification": {
+        "configVersion": 1,
+        "value": "Missing"
+      }
+    },
+    "message": "where are the files?",
+    "draft": false,
+    "deleted": false,
+    "defectRaised": true,
+    "defectApproved": false,
+    "readStatus": "READ",
+    "user": {
+      "userName": "admin",
+      "displayName": "admin",
+      "avatarUrl": "http://msedgewin10:8060/avatar/admin?s=48",
+      "url": "/user/admin"
+    },
+    "createDate": "2019-05-19T10:48:06.311-0700",
+    "permaId": {
+      "id": "CMT:1"
+    },
+    "replies": [],
+    "permId": {
+      "id": "CMT:1"
+    },
+    "parentCommentId": {}
+  },
+  {
+    "metrics": {
+      "rank": {
+        "configVersion": 1,
+        "value": "Minor"
+      },
+      "classification": {
+        "configVersion": 1,
+        "value": "Risk-prone"
+      }
+    },
+    "message": "in review state",
+    "draft": false,
+    "deleted": false,
+    "defectRaised": true,
+    "defectApproved": false,
+    "readStatus": "READ",
+    "user": {
+      "userName": "admin",
+      "displayName": "admin",
+      "avatarUrl": "http://msedgewin10:8060/avatar/admin?s=48",
+      "url": "/user/admin"
+    },
+    "createDate": 1558288171295,
+    "permaId": "CMT:2",
+    "replies": [],
+    "reviewItemId": {
+      "id": "CFR-2"
+    },
+    "toLineRange": "28",
+    "lineRanges": [
+      {
+        "revision": "2",
+        "range": "28"
+      }
+    ]
+  }
+]

@@ -1,18 +1,16 @@
-{
-  "reviewer": [
-    {
-      "userName": "james",
-      "displayName": "james",
-      "avatarUrl": "http://msedgewin10:8060/avatar/james?s=48",
-      "completed": true,
-      "completionStatusChangeDate": 1558288597436,
-      "timeSpent": 6923
-    },
-    {
-      "userName": "lad",
-      "displayName": "lad",
-      "avatarUrl": "http://msedgewin10:8060/avatar/lad?s=48",
-      "completed": false
-    }
-  ]
-}
+[
+  {
+    "userName": "james",
+    "displayName": "james",
+    "avatarUrl": "http://msedgewin10:8060/avatar/james?s=48",
+    "completed": true,
+    "completionStatusChangeDate": 1558288597436,
+    "timeSpent": 6923
+  },
+  {
+    "userName": "lad",
+    "displayName": "lad",
+    "avatarUrl": "http://msedgewin10:8060/avatar/lad?s=48",
+    "completed": false
+  }
+]

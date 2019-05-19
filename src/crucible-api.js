@@ -7,18 +7,31 @@ function pollReviews() {
     if (err) {
       setTimeout(pollReviews, 60000);
     } else {
-      setTimeout(pollReviews, 5000);
-      getReviewers('CR-2',
-        (err, reviewers) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('\n\n');
-            console.log(JSON.stringify(reviewers));
-            console.log('\n\n');
-          }
+      setTimeout(pollReviews, 15000);
+
+      getComments('CR-2', (err, comments) => {
+        if (err) {
+          console.log(err);
+        } else {
+          var comment = comments[1];
+          console.log('\n\n');
+          console.log(comment.createDate);
+          console.log('\n\n');
+          console.log(JSON.stringify(comments));
+          console.log('\n\n');
         }
-      );
+      });
+      
+      getReviewers('CR-2', (err, reviewers) => {
+        if (err) {
+          console.log(err);
+        } else {
+          var reviewer = reviewers[0];
+          console.log('\n\n');
+          console.log(JSON.stringify(reviewers));
+          console.log('\n\n');
+        }
+      });
     }
   });
 }
@@ -60,7 +73,7 @@ function getDetails(id, callback) {
       }
     })
     .catch((error) => {
-      console.log('getOpenReviews error: ' + error.message);
+      console.log('getDetails error: ' + error.message);
       callback(error.message, null);
     });
 }
@@ -76,12 +89,33 @@ function getReviewers(id, callback) {
 
   axios.get(uri, config)
     .then((res) => {
-      if (res.data && res.data) {
-        callback(null, res.data);
+      if (res.data && res.data.reviewer) {
+        callback(null, res.data.reviewer);
       }
     })
     .catch((error) => {
-      console.log('getOpenReviews error: ' + error.message);
+      console.log('getReviewers error: ' + error.message);
+      callback(error.message, null);
+    });
+}
+
+function getComments(id, callback) {
+  var uri = urljoin(settings.crucibleUrl, '/reviews-v1/', id, '/comments');
+  var config = {
+    auth: {
+      username: settings.username,
+      password: settings.password
+    }
+  };
+
+  axios.get(uri, config)
+    .then((res) => {
+      if (res.data && res.data.comments) {
+        callback(null, res.data.comments);
+      }
+    })
+    .catch((error) => {
+      console.log('getComments error: ' + error.message);
       callback(error.message, null);
     });
 }
