@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const createError = require('http-errors');
-import Crucible from "./crucible-api";
+import crucible from "./crucible.service";
 
 const reviewsRouter = require('./routes/reviews.route');
 const config = require('./config/config');
@@ -15,8 +15,8 @@ const connection = mongoose.connection;
 
 connection.once('open', () => {
   console.log(`connected to ${config.database}`);
-  Crucible.registerNewReviewCallback(newReviewCreated);
-  Crucible.pollOpenReviews(() => console.log('polling open reviews'));
+  crucible.registerNewReviewCallback(newReviewCreated);
+  crucible.pollOpenReviews(() => console.log('polling open reviews'));
 });
 
 function newReviewCreated(review) {
