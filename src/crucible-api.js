@@ -1,6 +1,6 @@
 import axios from 'axios';
 import urljoin from 'url-join';
-import config from './config/config';
+import config from './config/config.x';
 
 function pollReviews() {
   console.log('poll reviews - ' + config.crucibleUrl);

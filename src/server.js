@@ -5,7 +5,7 @@ const createError = require('http-errors');
 import Crucible from "./crucible-api";
 
 const reviewsRouter = require('./routes/reviews.route');
-const config = require('./config/config');
+const config = require('./config/config.x');
 
 // database connection
 mongoose.connect(config.database, {
