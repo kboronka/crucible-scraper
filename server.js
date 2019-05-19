@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const createError = require('http-errors');
+import Crucible from "./crucible-api";
 
 const reviewsRouter = require('./routes/reviews.route');
 const config = require('./config/config');
@@ -40,3 +41,12 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(config.port, '0.0.0.0', () => console.log(`listening on port ${config.port}`));
+
+
+Crucible.getReviews(config.crucibleUrl, (err, res) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(res);
+  }
+});
