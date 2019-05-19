@@ -178,7 +178,16 @@ function saveReview(review, callback) {
           callback(err, null, null);
         } else {
           reviewers.forEach(reviewer => {
-            newReview.isComplete &= reviewer.completed;
+            var newReviewer = {
+              userName: reviewer.userName,
+              displayName: reviewer.displayName,
+              avatarUrl: reviewer.avatarUrl,
+              completed: reviewer.completed,
+              timeSpent: reviewer.timeSpent ? reviewer.timeSpent : 0
+            }
+
+            newReview.isComplete &= newReviewer.completed;
+            newReview.reviewers.push(newReviewer);
           });
 
           Review.upsertReview(newReview, (err, success) => {

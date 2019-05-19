@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import { UserSchema } from './user.model';
-import { ReviewerSchema } from './reviewer.model';
 
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
@@ -22,14 +20,32 @@ let ReviewSchema = new Schema({
     type: String,
     required: true
   },
-  creator: UserSchema,
-  author: UserSchema,
-  moderator: UserSchema,
+  creator: {
+    userName: String,
+    displayName: String,
+    avatarUrl: String
+  },
+  author: {
+    userName: String,
+    displayName: String,
+    avatarUrl: String
+  },
+  moderator: {
+    userName: String,
+    displayName: String,
+    avatarUrl: String
+  },
   createDate: Date,
   dueDate: Date,
   hasDefects: Boolean,
   isComplete: Boolean,
-  reviewers: [ReviewerSchema]
+  reviewers: [{
+    userName: String,
+    displayName: String,
+    avatarUrl: String,
+    completed: Boolean,
+    timeSpent: Number
+  }]
 });
 
 const Review = module.exports = mongoose.model('Review', ReviewSchema);
