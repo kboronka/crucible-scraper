@@ -6,10 +6,13 @@ import Review from './models/review.model';
 var newReviewCallbacks = [];
 
 function pollReviews() {
+  const timeoutAfterError = 15 * 60 * 1000; // 15 minutes
+  const timeoutAfterSuccess = 30 * 1000; // 30 seconds
+
   console.log('\n\npolling...');
   getOpenReviews((err, reviewData) => {
     if (err) {
-      setTimeout(pollReviews, 60000);
+      setTimeout(pollReviews, timeoutAfterError);
     } else {
       if (reviewData) {
         var promises = [];
@@ -18,7 +21,6 @@ function pollReviews() {
           promises.push(new Promise((resolve, reject) =>
             saveReview(review, (err, updated, inserted) => {
               if (err) {
-                console.log(err);
                 reject(err);
               } else if (inserted) {
                 emitNewReview(inserted);
@@ -33,12 +35,11 @@ function pollReviews() {
         Promise.all(promises)
           .then(values => {
             console.log(values);
-            console.log('polling again in 5s');
-            setTimeout(pollReviews, 5000);
+            setTimeout(pollReviews, timeoutAfterSuccess);
           })
           .catch(err => {
-            console.log('polling again in 5s');
-            setTimeout(pollReviews, 60000);
+            console.log(err);
+            setTimeout(pollReviews, timeoutAfterError);
           });
       }
     }
