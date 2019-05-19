@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { UserSchema } from './user.model';
+import { ReviewerSchema } from './reviewer.model';
 
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
@@ -25,32 +26,28 @@ let ReviewSchema = new Schema({
   author: UserSchema,
   moderator: UserSchema,
   createDate: Date,
-  dueDate: Date
+  dueDate: Date,
+  hasDefects: Boolean,
+  isComplete: Boolean,
+  reviewers: [ReviewerSchema]
 });
 
-export const Review = mongoose.model('Review', ReviewSchema);
+const Review = module.exports = mongoose.model('Review', ReviewSchema);
 
-export function getReviews(callback) {
+module.exports.findAllReviews = function(callback) {
   Review.find(callback);
 }
 
-export function getReviewById(id, callback) {
+module.exports.findReviewById = function(id, callback) {
   Review.findById(id, callback);
 }
 
-export function addReview(review, callback) {
-  Review.create(review, callback);
+module.exports.upsertReview = function(review, callback) {
+  var query = { 'permaId': review.permaId };
+  Review.updateOne(query, review, { upsert: true }, callback);
 }
 
-export function updateReview(id, review, callback) {
-  review._id = new ObjectId(id);
-  var query = {
-    _id: review._id
-  };
-  Review.updateOne(query, review, callback);
-}
-
-export function deleteReview(id, callback) {
+module.exports.deleteReview = function(id, callback) {
   var query = {
     _id: new ObjectId(id)
   };

@@ -1,37 +1,30 @@
 import axios from 'axios';
 import urljoin from 'url-join';
 import settings from './config/config';
+import Review from './models/review.model';
 
 function pollReviews() {
   getOpenReviews((err, reviewData) => {
     if (err) {
       setTimeout(pollReviews, 60000);
     } else {
-      setTimeout(pollReviews, 15000);
+      if (reviewData) {
+        reviewData.forEach(review => {
+          saveReview(review, (err, updated, inserted) => {
+            if (err) {
+              console.log(err);
+            } else if (inserted) {
+              console.log(`created ${review.permaId.id}`);
+            } else {
+              console.log(`updated ${review.permaId.id}`);
+            }
 
-      getComments('CR-2', (err, comments) => {
-        if (err) {
-          console.log(err);
-        } else {
-          var comment = comments[1];
-          console.log('\n\n');
-          console.log(comment.createDate);
-          console.log('\n\n');
-          console.log(JSON.stringify(comments));
-          console.log('\n\n');
-        }
-      });
-      
-      getReviewers('CR-2', (err, reviewers) => {
-        if (err) {
-          console.log(err);
-        } else {
-          var reviewer = reviewers[0];
-          console.log('\n\n');
-          console.log(JSON.stringify(reviewers));
-          console.log('\n\n');
-        }
-      });
+          });
+        });
+      }
+
+      setTimeout(pollReviews, 25000);
+
     }
   });
 }
@@ -120,10 +113,80 @@ function getComments(id, callback) {
     });
 }
 
+function findAllReviews(callback) {
+  Review.findAllReviews((err, reviews) => {
+    callback(err, reviews);
+  });
+}
+
+function saveReview(review, callback) {
+  var newReview = {
+    projectKey: review.projectKey,
+    permaId: review.permaId.id,
+    name: review.name,
+    state: review.state,
+    creator: {
+      userName: review.creator.userName,
+      displayName: review.creator.displayName,
+      avatarUrl: review.creator.avatarUrl,
+    },
+    author: {
+      userName: review.creator.userName,
+      displayName: review.creator.displayName,
+      avatarUrl: review.creator.avatarUrl,
+    },
+    moderator: {
+      userName: review.creator.userName,
+      displayName: review.creator.displayName,
+      avatarUrl: review.creator.avatarUrl,
+    },
+    createDate: review.createDate,
+    dueDate: review.dueDate,
+    hasDefects: true,
+    isComplete: false,
+    reviewers: []
+  }
+
+  getComments(newReview.permaId, (err, comments) => {
+    if (err) {
+      console.log(err);
+    } else {
+      getReviewers(newReview.permaId, (err, reviewers) => {
+        if (err) {
+          console.log(err);
+        } else {
+          Review.upsertReview(newReview, (err, success) => {
+            if (err) {
+              callback(err, null, null);
+            } else if (success.nModified == 0 &&
+              success.upserted) {
+              callback(null, null, true);
+            } else {
+              callback(null, true, null);
+            }
+          });
+        }
+      });
+    }
+  });
+
+
+
+
+}
+
 module.exports = {
   getOpenReviews: getOpenReviews,
   pollOpenReviews: function(callback) {
-    setTimeout(pollReviews, 1000);
-    callback();
+    findAllReviews((err, reviews) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(reviews);
+      }
+
+      setTimeout(pollReviews, 1000);
+      callback();
+    });
   }
 }
