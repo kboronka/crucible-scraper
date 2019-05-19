@@ -1,19 +1,31 @@
 import mongoose from 'mongoose';
+import { UserSchema } from './user.model';
 
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
 let ReviewSchema = new Schema({
+  projectKey: {
+    type: String,
+    required: true
+  },
+  permaId: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true
   },
-  trunkUrl: {
+  state: {
     type: String,
     required: true
   },
-  slackWebhook: String,
-  steps: [StepSchema]
+  creator: UserSchema,
+  author: UserSchema,
+  moderator: UserSchema,
+  createDate: Date,
+  dueDate: Date
 });
 
 export const Review = mongoose.model('Review', ReviewSchema);
