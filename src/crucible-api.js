@@ -8,13 +8,13 @@ function pollReviews() {
       setTimeout(pollReviews, 60000);
     } else {
       setTimeout(pollReviews, 5000);
-      getReviewDetails('CR-2',
-        (err, details) => {
+      getReviewers('CR-2',
+        (err, reviewers) => {
           if (err) {
             console.log(err);
           } else {
             console.log('\n\n');
-            console.log(JSON.stringify(details));
+            console.log(JSON.stringify(reviewers));
             console.log('\n\n');
           }
         }
@@ -44,8 +44,29 @@ function getOpenReviews(callback) {
     });
 }
 
-function getReviewDetails(id, callback) {
+function getDetails(id, callback) {
   var uri = urljoin(settings.crucibleUrl, '/reviews-v1/', id, '/details');
+  var config = {
+    auth: {
+      username: settings.username,
+      password: settings.password
+    }
+  };
+
+  axios.get(uri, config)
+    .then((res) => {
+      if (res.data && res.data) {
+        callback(null, res.data);
+      }
+    })
+    .catch((error) => {
+      console.log('getOpenReviews error: ' + error.message);
+      callback(error.message, null);
+    });
+}
+
+function getReviewers(id, callback) {
+  var uri = urljoin(settings.crucibleUrl, '/reviews-v1/', id, '/reviewers');
   var config = {
     auth: {
       username: settings.username,
