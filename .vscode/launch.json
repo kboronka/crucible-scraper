@@ -6,12 +6,9 @@
   "configurations": [{
     "type": "node",
     "request": "launch",
-    "name": "Launch via NPM",
-    // "preLaunchTask": "build-bable",
-    "runtimeExecutable": "npm",
-    "runtimeArgs": [
-      "start"
-    ],
-    "port": 9229
+    "preLaunchTask": "build-babel",
+    "name": "Debug",
+    "program": "${workspaceRoot}/src/server.js",
+    "outFiles": ["${workspaceRoot}/dist/**/*.js"]
   }]
 }
