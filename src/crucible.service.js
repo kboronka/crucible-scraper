@@ -10,21 +10,18 @@ function pollReviews() {
   const timeoutAfterError = 15 * 60 * 1000; // 15 minutes
   const timeoutAfterSuccess = 30 * 1000; // 30 seconds
 
-  getOpenReviews((err, reviewData) => {
-    if (err) {
-      setTimeout(pollReviews, timeoutAfterError);
-    } else {
-      if (reviewData) {
+  findAllOpenReviews((err, dbOpenReviews) => {
+    getOpenReviews((err, crucibleOpenReviewData) => {
+      if (err) {
+        setTimeout(pollReviews, timeoutAfterError);
+      } else if (crucibleOpenReviewData) {
         var promises = [];
 
-        reviewData.forEach(review => {
+        crucibleOpenReviewData.forEach(review => {
           promises.push(new Promise((resolve, reject) =>
-            saveReview(review, (err, inserted, updated, closed) => {
+            upsertOpenReview(review, (err, inserted, updated) => {
               if (err) {
                 reject(err);
-              } else if (closed) {
-                emitReviewClosed(closed);
-                resolve(closed.permaId)
               } else if (inserted) {
                 emitReviewInserted(inserted);
                 resolve(inserted.permaId);
@@ -35,6 +32,20 @@ function pollReviews() {
           ));
         });
 
+        // find closed reviews
+        if (dbOpenReviews) {
+          var closedReviewsFound = dbOpenReviews.filter(function(dbReview) {
+            return crucibleOpenReviewData.map(function(e) { return e.permaId.id; }).indexOf(dbReview.permaId) === -1;
+          });
+
+          closedReviewsFound.forEach(review => {
+            promises.push(new Promise((resolve, reject) => {
+              emitReviewClosed(review);
+              resolve(review.permaId);
+            }));
+          });
+        }
+
         Promise.all(promises)
           .then(values => {
             console.log(values);
@@ -44,8 +55,10 @@ function pollReviews() {
             console.log(err);
             setTimeout(pollReviews, timeoutAfterError);
           });
+      } else {
+        setTimeout(pollReviews, timeoutAfterSuccess);
       }
-    }
+    });
   });
 }
 
@@ -139,7 +152,13 @@ function findAllReviews(callback) {
   });
 }
 
-function saveReview(review, callback) {
+function findAllOpenReviews(callback) {
+  Review.findAllOpenReviews((err, reviews) => {
+    callback(err, reviews);
+  });
+}
+
+function upsertOpenReview(review, callback) {
   var newReview = {
     projectKey: review.projectKey,
     permaId: review.permaId.id,
@@ -236,6 +255,5 @@ module.exports = {
   pollOpenReviews: function(callback) {
     setTimeout(pollReviews, 1000);
     callback();
-  });
-}
+  }
 }

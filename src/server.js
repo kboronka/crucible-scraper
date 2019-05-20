@@ -15,12 +15,17 @@ const connection = mongoose.connection;
 
 connection.once('open', () => {
   console.log(`connected to ${config.database}`);
-  crucible.registerReviewInsertedCallback(newReviewCreated);
+  crucible.registerReviewInsertedCallback(reviewCreated);
+  crucible.registerReviewClosedCallback(reviewClosed);
   crucible.pollOpenReviews(() => console.log('polling open reviews'));
 });
 
-function newReviewCreated(review) {
-  console.log(`new review!! ${review.permaId}`)
+function reviewCreated(review) {
+  console.log(`!! new review !! ${review.permaId}`)
+}
+
+function reviewClosed(review) {
+  console.log(`!! review closed !! ${review.permaId}`)
 }
 
 connection.once('error', (err) => {
