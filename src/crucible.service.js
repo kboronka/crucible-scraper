@@ -17,7 +17,7 @@ function pollReviews() {
       } else if (crucibleOpenReviewData) {
         var promises = [];
 
-        crucibleOpenReviewData.forEach(review => {
+        crucibleOpenReviewData.forEach(review =>
           promises.push(new Promise((resolve, reject) =>
             upsertOpenReview(review, (err, inserted, updated) => {
               if (err) {
@@ -29,8 +29,8 @@ function pollReviews() {
                 resolve(updated.permaId);
               }
             })
-          ));
-        });
+          ))
+        );
 
         // find closed reviews
         if (dbOpenReviews) {
@@ -38,12 +38,20 @@ function pollReviews() {
             return crucibleOpenReviewData.map(function(e) { return e.permaId.id; }).indexOf(dbReview.permaId) === -1;
           });
 
-          closedReviewsFound.forEach(review => {
-            promises.push(new Promise((resolve, reject) => {
-              emitReviewClosed(review);
-              resolve(review.permaId);
-            }));
-          });
+          closedReviewsFound.forEach(review =>
+            promises.push(new Promise((resolve, reject) =>
+              upsertClosedReview(review, (err, closed, abandoned) => {
+                if (err) {
+                  reject(err);
+                } else if (closed) {
+                  emitReviewClosed(closed);
+                  resolve(closed.permaId);
+                } else if (abandoned) {
+                  resolve(abandoned.permaId);
+                }
+              })
+            ))
+          );
         }
 
         Promise.all(promises)
@@ -215,11 +223,62 @@ function upsertOpenReview(review, callback) {
 
           Review.upsertReview(newReview, (err, success) => {
             if (err) {
-              callback(err, null, null, null);
+              callback(err, null, null);
             } else if (success.nModified == 0 && success.upserted) {
-              callback(null, newReview, null, null);
+              callback(null, newReview, null);
             } else {
-              callback(null, null, newReview, null);
+              callback(null, null, newReview);
+            }
+          });
+        }
+      });
+    }
+  });
+
+}
+
+function upsertClosedReview(newReview, callback) {
+  getDetails(newReview.permaId, (err, details) => {
+    if (err) {
+      callback(err, null, null);
+    } else {
+      getComments(newReview.permaId, (err, comments) => {
+        if (err) {
+          callback(err, null, null);
+        } else {
+          comments.forEach(comment => {
+            if (!comment.draft && !comment.deleted) {
+              newReview.hasDefects |= comment.defectRaised && !comment.defectApproved;
+            }
+          });
+
+          getReviewers(newReview.permaId, (err, reviewers) => {
+            if (err) {
+              callback(err, null, null);
+            } else {
+              reviewers.forEach(reviewer => {
+                var newReviewer = {
+                  userName: reviewer.userName,
+                  displayName: reviewer.displayName,
+                  avatarUrl: reviewer.avatarUrl,
+                  completed: reviewer.completed,
+                  timeSpent: reviewer.timeSpent ? reviewer.timeSpent : 0
+                }
+
+                newReview.isComplete &= newReviewer.completed;
+                newReview.reviewers.push(newReviewer);
+              });
+
+              newReview.state = details.state;
+              Review.upsertReview(newReview, (err, success) => {
+                if (err) {
+                  callback(err, null, null);
+                } else if (newReview.state === 'Closed') {
+                  callback(null, newReview, null);
+                } else {
+                  callback(null, null, newReview);
+                }
+              });
             }
           });
         }
