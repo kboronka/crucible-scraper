@@ -20,6 +20,12 @@ connection.once('open', () => {
   crucible.pollOpenReviews(() => console.log('polling open reviews'));
 });
 
+connection.once('error', (err) => {
+  console.log(`database error ${err}`);
+});
+
+
+// review event handlers
 function reviewCreated(review) {
   console.log(`!! new review !! ${review.permaId}`)
 }
@@ -27,10 +33,6 @@ function reviewCreated(review) {
 function reviewClosed(review) {
   console.log(`!! review closed !! ${review.permaId}`)
 }
-
-connection.once('error', (err) => {
-  console.log(`database error ${err}`);
-});
 
 // express
 const app = express();

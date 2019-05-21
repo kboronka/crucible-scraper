@@ -5,6 +5,7 @@
     "dbname",
     "htmlhint",
     "jira",
+    "perma",
     "upsert",
     "urljoin"
   ]
