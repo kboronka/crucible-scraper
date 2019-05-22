@@ -9,6 +9,7 @@
     "preLaunchTask": "build-babel",
     "name": "Debug",
     "program": "${workspaceRoot}/src/server.js",
-    "outFiles": ["${workspaceRoot}/.compile/**/*.js"]
+    "outFiles": ["${workspaceRoot}/.compile/**/*.js"],
+    "env": { "NODE_ENV": "development" }
   }]
 }

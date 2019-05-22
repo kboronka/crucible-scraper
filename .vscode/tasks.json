@@ -6,6 +6,10 @@
     "label": "build-babel",
     "type": "npm",
     "script": "build",
-    "group": "build"
+    "group": "build",
+    "presentation": {
+      "reveal": "silent",
+      "panel": "dedicated"
+    }
   }]
 }
