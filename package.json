@@ -18,8 +18,8 @@
   "scripts": {
     "build": "babel src -d .compile --source-maps",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel-node server.js",
-    "dev": "nodemon --exec babel-node server.js"
+    "start": "babel-node src/server.js",
+    "dev": "nodemon --exec babel-node src/server.js"
   },
   "repository": {
     "type": "git",
