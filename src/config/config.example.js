@@ -1,3 +1,5 @@
+var isDebug = process.env.NODE_ENV ? true : false;
+
 module.exports = {
   port: process.env.PORT || 4005,
   secret: process.env.SECRET || 'secret-goes-here',
