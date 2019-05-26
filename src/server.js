@@ -12,8 +12,8 @@ import config from './config/config';
 mongoose.connect(config.database, {
   useNewUrlParser: true
 });
-const connection = mongoose.connection;
 
+const connection = mongoose.connection;
 connection.once('open', () => {
   console.log(`connected to ${config.database}`);
   fecru.registerReviewInsertedCallback(reviewCreated);
