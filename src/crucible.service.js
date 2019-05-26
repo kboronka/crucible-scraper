@@ -90,7 +90,8 @@ function getOpenReviews(callback) {
   axios.get(uri, config)
     .then((res) => {
       if (res.data && res.data.reviewData) {
-        callback(null, res.data.reviewData);
+        var reviews = res.data.reviewData.filter(r => r.projectKey === settings.projectKey);
+        callback(null, reviews);
       }
     })
     .catch((error) => {
@@ -169,7 +170,7 @@ function findAllReviews(callback) {
 }
 
 function findAllOpenReviews(callback) {
-  Review.findAllOpenReviews((err, reviews) => {
+  Review.findAllOpenReviews(settings.projectKey, (err, reviews) => {
     callback(err, reviews);
   });
 }

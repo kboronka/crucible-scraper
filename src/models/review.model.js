@@ -54,8 +54,8 @@ module.exports.findAllReviews = function(callback) {
   Review.find(callback);
 }
 
-module.exports.findAllOpenReviews = function(callback) {
-  var query = { state: 'Review' };
+module.exports.findAllOpenReviews = function(projectKey, callback) {
+  var query = { state: 'Review', projectKey: projectKey };
   Review.find(query, callback);
 }
 
