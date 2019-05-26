@@ -49,7 +49,6 @@ function pollReviews() {
                   resolve(closed.permaId);
                 } else if (abandoned) {
                   // delete dead reviews
-                  emitReviewAbandoned(abandoned);
                   Review.deleteReview(abandoned, (err, deleted) => {
                     if (err) {
                       reject(err);
