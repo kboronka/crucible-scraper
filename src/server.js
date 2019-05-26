@@ -1,12 +1,12 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const createError = require('http-errors');
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import createError from 'http-errors';
 import fecru from "./fecru.service";
 import slack from "./slack.service";
 
-const reviewsRouter = require('./routes/reviews.route');
-const config = require('./config/config');
+import reviewsRouter from './routes/reviews.route';
+import config from './config/config';
 
 // database connection
 mongoose.connect(config.database, {
