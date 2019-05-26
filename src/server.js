@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const createError = require('http-errors');
-import crucible from "./crucible.service";
+import fecru from "./fecru.service";
 import slack from "./slack.service";
 
 const reviewsRouter = require('./routes/reviews.route');
@@ -16,10 +16,10 @@ const connection = mongoose.connection;
 
 connection.once('open', () => {
   console.log(`connected to ${config.database}`);
-  crucible.registerReviewInsertedCallback(reviewCreated);
-  crucible.registerReviewClosedCallback(reviewClosed);
-  crucible.registerReviewAbandonedCallback(reviewAbandoned);
-  crucible.pollOpenReviews(() => console.log('polling open reviews'));
+  fecru.registerReviewInsertedCallback(reviewCreated);
+  fecru.registerReviewClosedCallback(reviewClosed);
+  fecru.registerReviewAbandonedCallback(reviewAbandoned);
+  fecru.pollOpenReviews(() => console.log('polling open reviews'));
 });
 
 connection.once('error', (err) => {
