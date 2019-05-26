@@ -21,7 +21,7 @@ function reviewCreatedAttachment(review) {
     "title": "Review Started",
     "text": `${review.name}`,
     "fields": [{
-      "title": "author",
+      "title": "Author",
       "value": review.author.displayName,
       "short": false
     }, {
@@ -57,8 +57,12 @@ function reviewClosedAttachment(review) {
     "title": "Review Closed",
     "text": `${review.permaId} - ${review.name}`,
     "fields": [{
-      "title": "author",
+      "title": "Author",
       "value": review.author.displayName,
+      "short": true
+    }, {
+      "title": "Moderator",
+      "value": review.moderator.displayName,
       "short": true
     }, {
       "title": "Duration",
@@ -90,7 +94,7 @@ function reviewAbandonedAttachment(review) {
     "title": "Review Abandoned",
     "text": `${review.permaId} - ${review.name}`,
     "fields": [{
-      "title": "author",
+      "title": "Author",
       "value": review.author.displayName,
       "short": true
     }, {
