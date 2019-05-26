@@ -1,9 +1,11 @@
 import axios from 'axios';
 import settings from './config/config';
 import time from './format-time';
+import urljoin from 'url-join';
 
 const green = "#2eb886";
 const red = "#b72834";
+const blue = "#3aa3e3";
 
 function reviewCreatedAttachment(review) {
   console.log(`review started: ${review.permaId} - ${review.name}`);
@@ -14,6 +16,10 @@ function reviewCreatedAttachment(review) {
     reviewers += delimiter + reviewer.displayName;
     delimiter = ', ';
   });
+
+  var reviewUri = urljoin(settings.crucibleUrl.replace('/rest-service', ''),
+    'cru',
+    review.permaId);
 
   var attachment = [{
     "fallback": `Review Started: ${review.permaId} - ${review.name}`,
@@ -31,7 +37,16 @@ function reviewCreatedAttachment(review) {
     }],
     "footer": "fecru-monitor",
     "ts": new Date(review.createDate).getTime() / 1000 | 0
-  }];
+  }, {
+    "fallback": reviewUri,
+    "color": blue,
+    "attachment_type": "default",
+    "actions": [{
+      "type": "button",
+      "text": "Open Review",
+      "url": reviewUri
+    }]
+  }]
 
   return attachment;
 }
@@ -51,7 +66,7 @@ function reviewClosedAttachment(review) {
     delimiter = ', ';
   });
 
-  var attachment = [{
+  var attachments = [{
     "fallback": `Review Closed: ${review.permaId} - ${review.name}`,
     "color": green,
     "title": "Review Closed",
@@ -77,7 +92,7 @@ function reviewClosedAttachment(review) {
     "ts": new Date().getTime() / 1000 | 0
   }];
 
-  return attachment;
+  return attachments;
 }
 
 function reviewAbandonedAttachment(review) {
@@ -88,7 +103,7 @@ function reviewAbandonedAttachment(review) {
   var durationMs = endTime - startTime;
   var durationTime = time.msToTime(durationMs);
 
-  var attachment = [{
+  var attachments = [{
     "fallback": `Review Abandoned: ${review.permaId} - ${review.name}`,
     "color": red,
     "title": "Review Abandoned",
@@ -106,7 +121,7 @@ function reviewAbandonedAttachment(review) {
     "ts": new Date().getTime() / 1000 | 0
   }];
 
-  return attachment;
+  return attachments;
 }
 
 function reviewCreated(review) {
