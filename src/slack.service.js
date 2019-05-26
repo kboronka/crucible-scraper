@@ -128,7 +128,6 @@ function reviewAbandonedAttachment(review) {
 function reviewCreated(review) {
   var uri = settings.slackUrl;
   var body = {
-    "channel": settings.slackChannel,
     "username": "ReviewBot",
     "icon_emoji": ":robot_face:",
     "text": "",
@@ -145,7 +144,6 @@ function reviewCreated(review) {
 function reviewClosed(review) {
   var uri = settings.slackUrl;
   var body = {
-    "channel": settings.slackChannel,
     "username": "ReviewBot",
     "icon_emoji": ":robot_face:",
     "text": "",
@@ -162,7 +160,6 @@ function reviewClosed(review) {
 function reviewAbandoned(review) {
   var uri = settings.slackUrl;
   var body = {
-    "channel": settings.slackChannel,
     "username": "ReviewBot",
     "icon_emoji": ":robot_face:",
     "text": "",
