@@ -1,5 +1,4 @@
-[
-  {
+[{
     "projectKey": "CR",
     "name": "test2",
     "author": {
@@ -32,7 +31,8 @@
     "metricsVersion": 1,
     "createDate": "2019-05-18T18:44:47.675-0700",
     "dueDate": "2019-05-27T18:30:00.000-0700",
-    "linkedIssues": []
+    "linkedIssues": [],
+    "jiraIssueKey": "XXS-1234"
   },
   {
     "projectKey": "CR",
