@@ -26,7 +26,6 @@ connection.once('error', (err) => {
   console.log(`database error ${err}`);
 });
 
-
 // review event handlers
 function reviewCreated(review) {
   console.log(`!! new review !! ${review.permaId}`)
