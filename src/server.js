@@ -28,17 +28,17 @@ connection.once('error', (err) => {
 
 // review event handlers
 function reviewCreated(review) {
-  console.log(`!! new review !! ${review.permaId}`)
+  console.log(`\n\n!! new review !! ${review.permaId}`)
   slack.reviewCreated(review);
 }
 
 function reviewClosed(review) {
-  console.log(`!! review closed !! ${review.permaId}`)
+  console.log(`\n\n!! review closed !! ${review.permaId}`)
   slack.reviewClosed(review);
 }
 
 function reviewAbandoned(review) {
-  console.log(`!! review abandoned !! ${review.permaId}`)
+  console.log(`\n\n!! review abandoned !! ${review.permaId}`)
   slack.reviewAbandoned(review);
 }
 
