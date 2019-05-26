@@ -216,19 +216,9 @@ function upsertOpenReview(review, callback) {
         if (err) {
           callback(err, null, null);
         } else {
-          reviewers.forEach(reviewer => {
-            var newReviewer = {
-              userName: reviewer.userName,
-              displayName: reviewer.displayName,
-              avatarUrl: reviewer.avatarUrl,
-              completed: reviewer.completed,
-              timeSpent: reviewer.timeSpent ? reviewer.timeSpent : 0
-            }
+          updateReviewers(newReview, reviewers);
 
-            newReview.isComplete &= newReviewer.completed;
-            newReview.reviewers.push(newReviewer);
-          });
-
+          newReview.isComplete = newReview.reviewers.every(r => r.completed);
           Review.upsertReview(newReview, (err, success) => {
             if (err) {
               callback(err, null, null);
@@ -242,7 +232,6 @@ function upsertOpenReview(review, callback) {
       });
     }
   });
-
 }
 
 function upsertClosedReview(review, callback) {
@@ -264,19 +253,9 @@ function upsertClosedReview(review, callback) {
             if (err) {
               callback(err, null, null);
             } else {
-              reviewers.forEach(reviewer => {
-                var newReviewer = {
-                  userName: reviewer.userName,
-                  displayName: reviewer.displayName,
-                  avatarUrl: reviewer.avatarUrl,
-                  completed: reviewer.completed,
-                  timeSpent: reviewer.timeSpent ? reviewer.timeSpent : 0
-                }
+              updateReviewers(review, reviewers);
 
-                review.isComplete &= newReviewer.completed;
-                review.reviewers.push(newReviewer);
-              });
-
+              review.isComplete = review.reviewers.every(r => r.completed);
               review.state = details.state;
               Review.upsertReview(review, (err, success) => {
                 if (err) {
@@ -293,7 +272,26 @@ function upsertClosedReview(review, callback) {
       });
     }
   });
+}
 
+function updateReviewers(review, reviewers) {
+  reviewers.forEach(reviewer => {
+    var newReviewer = {
+      userName: reviewer.userName,
+      displayName: reviewer.displayName,
+      avatarUrl: reviewer.avatarUrl,
+      completed: reviewer.completed,
+      timeSpent: reviewer.timeSpent ? reviewer.timeSpent : 0
+    }
+
+    var reviewerIndex = review.reviewers.map(function(e) { return e.userName; }).indexOf(reviewer.userName);
+
+    if (reviewerIndex === -1) {
+      review.reviewers.push(newReviewer);
+    } else {
+      review.reviewers[reviewerIndex] = newReviewer;
+    }
+  });
 }
 
 function registerReviewInsertedCallback(callback) {
