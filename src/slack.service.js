@@ -17,13 +17,14 @@ function reviewCreatedAttachment(review) {
     delimiter = ', ';
   });
 
-  var reviewUri = urljoin(settings.crucibleUrl.replace('/rest-service', ''),
+  var reviewUri = urljoin(
+    settings.crucibleUrl.replace('/rest-service', ''),
     'cru',
     review.permaId);
 
-  var attachment = [{
+  var attachments = [{
     "fallback": `Review Started: ${review.permaId} - ${review.name}`,
-    "color": green,
+    "color": blue,
     "title": "Review Started",
     "text": `${review.name}`,
     "fields": [{
@@ -35,20 +36,16 @@ function reviewCreatedAttachment(review) {
       "value": reviewers,
       "short": false
     }],
-    "footer": "fecru-monitor",
-    "ts": new Date(review.createDate).getTime() / 1000 | 0
-  }, {
-    "fallback": reviewUri,
-    "color": blue,
-    "attachment_type": "default",
     "actions": [{
       "type": "button",
       "text": "Open Review",
       "url": reviewUri
-    }]
+    }],
+    "footer": "fecru-monitor",
+    "ts": new Date(review.createDate).getTime() / 1000 | 0
   }]
 
-  return attachment;
+  return attachments;
 }
 
 function reviewClosedAttachment(review) {
