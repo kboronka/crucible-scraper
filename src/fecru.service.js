@@ -90,7 +90,9 @@ function getOpenReviews(callback) {
   axios.get(uri, config)
     .then((res) => {
       if (res.data && res.data.reviewData) {
-        var reviews = res.data.reviewData.filter(r => r.projectKey === settings.projectKey);
+        var reviews = res.data.reviewData.filter(r =>
+          r.jiraIssueKey &&
+          r.projectKey === settings.projectKey);
         callback(null, reviews);
       }
     })
@@ -200,6 +202,7 @@ function upsertOpenReview(review, callback) {
     dueDate: review.dueDate,
     hasDefects: false,
     isComplete: true,
+    jiraIssueKey: review.jiraIssueKey,
     reviewers: []
   }
 

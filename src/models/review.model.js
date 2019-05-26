@@ -39,6 +39,7 @@ let ReviewSchema = new Schema({
   dueDate: Date,
   hasDefects: Boolean,
   isComplete: Boolean,
+  jiraIssueKey: String,
   reviewers: [{
     userName: String,
     displayName: String,

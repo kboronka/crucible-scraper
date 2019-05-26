@@ -27,6 +27,12 @@ function reviewCreatedAttachment(review) {
     'cru',
     review.permaId);
 
+  var jiraIssueUrl = urljoin(
+    settings.jiraUrl,
+    'browse',
+    review.jiraIssueKey
+  );
+
   var attachments = [{
     "fallback": `Review Started: ${review.permaId} - ${review.name}`,
     "color": blue,
@@ -43,7 +49,7 @@ function reviewCreatedAttachment(review) {
     }, {
       "title": "Reviewers",
       "value": reviewers,
-      "short": false
+      "short": true
     }],
     "footer": "fecru-monitor",
     "ts": new Date().getTime() / 1000 | 0
@@ -55,6 +61,10 @@ function reviewCreatedAttachment(review) {
       "type": "button",
       "text": "Open Review",
       "url": reviewUri
+    }, {
+      "type": "button",
+      "text": "Open Issue",
+      "url": jiraIssueUrl
     }]
   }]
 
@@ -76,6 +86,12 @@ function reviewClosedAttachment(review) {
     delimiter = ', ';
   });
 
+  var jiraIssueUrl = urljoin(
+    settings.jiraUrl,
+    'browse',
+    review.jiraIssueKey
+  );
+
   var attachments = [{
     "fallback": `Review Closed: ${review.permaId} - ${review.name}`,
     "color": green,
@@ -92,6 +108,10 @@ function reviewClosedAttachment(review) {
     }, {
       "title": "Age",
       "value": durationTime,
+      "short": true
+    }, {
+      "title": "Jira Issue",
+      "value": `<${jiraIssueUrl}|${review.jiraIssueKey}>`,
       "short": true
     }, {
       "title": "Reviewers",
@@ -113,6 +133,12 @@ function reviewAbandonedAttachment(review) {
   var durationMs = endTime - startTime;
   var durationTime = time.msToTime(durationMs);
 
+  var jiraIssueUrl = urljoin(
+    settings.jiraUrl,
+    'browse',
+    review.jiraIssueKey
+  );
+
   var attachments = [{
     "fallback": `Review Abandoned: ${review.permaId} - ${review.name}`,
     "color": red,
@@ -125,6 +151,10 @@ function reviewAbandonedAttachment(review) {
     }, {
       "title": "Age",
       "value": durationTime,
+      "short": true
+    }, {
+      "title": "Jira Issue",
+      "value": `<${jiraIssueUrl}|${review.jiraIssueKey}>`,
       "short": true
     }],
     "footer": "fecru-monitor",

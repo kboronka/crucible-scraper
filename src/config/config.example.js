@@ -8,5 +8,6 @@ module.exports = {
   projectKey: process.env.FECRU_PROJECT_KEY || 'CR',
   username: process.env.FECRU_API_USER || 'user',
   password: process.env.FECRU_API_PASSWORD || 'password',
-  slackUrl: process.env.SLACK_WEBHOOK_URL || 'http://slack.com/webhook'
+  slackUrl: process.env.SLACK_WEBHOOK_URL || 'http://slack.com/webhook',
+  jiraUrl: process.env.JIRA_URL || 'https://jira.com/'
 }
