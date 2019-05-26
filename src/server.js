@@ -40,7 +40,7 @@ function reviewClosed(review) {
 
 function reviewAbandoned(review) {
   console.log(`!! review abandoned !! ${review.permaId}`)
-  slack.reviewClosed(review);
+  slack.reviewAbandoned(review);
 }
 
 // express

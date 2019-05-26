@@ -76,6 +76,35 @@ function reviewClosedAttachment(review) {
   return attachment;
 }
 
+function reviewAbandonedAttachment(review) {
+  console.log(`review abandoned: ${review.permaId} - ${review.name}`);
+
+  var startTime = new Date(review.createDate).getTime();
+  var endTime = new Date().getTime();
+  var durationMs = endTime - startTime;
+  var durationTime = time.msToTime(durationMs);
+
+  var attachment = [{
+    "fallback": `Review Abandoned: ${review.permaId} - ${review.name}`,
+    "color": red,
+    "title": "Review Abandoned",
+    "text": `${review.permaId} - ${review.name}`,
+    "fields": [{
+      "title": "author",
+      "value": review.author.displayName,
+      "short": true
+    }, {
+      "title": "Duration",
+      "value": durationTime,
+      "short": true
+    }],
+    "footer": "fecru-scraper",
+    "ts": new Date().getTime() / 1000 | 0
+  }];
+
+  return attachment;
+}
+
 function reviewCreated(review) {
   var uri = settings.slackUrl;
   var body = {
@@ -110,7 +139,25 @@ function reviewClosed(review) {
     });
 }
 
+function reviewAbandoned(review) {
+  var uri = settings.slackUrl;
+  var body = {
+    "channel": settings.slackChannel,
+    "username": "ReviewBot",
+    "icon_emoji": ":robot_face:",
+    "text": "",
+    "attachments": reviewAbandonedAttachment(review)
+  };
+
+  axios.post(uri, body)
+    .then(function(res) {})
+    .catch(function(err) {
+      console.log(err.message);
+    });
+}
+
 module.exports = {
   reviewCreated: reviewCreated,
-  reviewClosed: reviewClosed
+  reviewClosed: reviewClosed,
+  reviewAbandoned: reviewAbandoned,
 }
