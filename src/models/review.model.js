@@ -68,9 +68,7 @@ module.exports.upsertReview = function(review, callback) {
   Review.updateOne(query, review, { upsert: true }, callback);
 }
 
-module.exports.deleteReview = function(id, callback) {
-  var query = {
-    _id: new ObjectId(id)
-  };
+module.exports.deleteReview = function(review, callback) {
+  var query = { 'permaId': review.permaId };
   Review.deleteOne(query, callback);
 }

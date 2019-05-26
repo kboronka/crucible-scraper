@@ -5,6 +5,7 @@ import Review from './models/review.model';
 
 var newReviewCallbacks = [];
 var closedReviewCallbacks = [];
+var abandonedReviewCallbacks = [];
 
 function pollReviews() {
   const timeoutAfterError = 15 * 60 * 1000; // 15 minutes
@@ -47,7 +48,16 @@ function pollReviews() {
                   emitReviewClosed(closed);
                   resolve(closed.permaId);
                 } else if (abandoned) {
-                  resolve(abandoned.permaId);
+                  // delete dead reviews
+                  emitReviewAbandoned(abandoned);
+                  Review.deleteReview(abandoned, (err, deleted) => {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      emitReviewAbandoned(abandoned);
+                      resolve(abandoned.permaId);
+                    }
+                  });
                 }
               })
             ))
@@ -56,7 +66,6 @@ function pollReviews() {
 
         Promise.all(promises)
           .then(values => {
-            console.log(values);
             setTimeout(pollReviews, timeoutAfterSuccess);
           })
           .catch(err => {
@@ -237,22 +246,22 @@ function upsertOpenReview(review, callback) {
 
 }
 
-function upsertClosedReview(newReview, callback) {
-  getDetails(newReview.permaId, (err, details) => {
+function upsertClosedReview(review, callback) {
+  getDetails(review.permaId, (err, details) => {
     if (err) {
       callback(err, null, null);
     } else {
-      getComments(newReview.permaId, (err, comments) => {
+      getComments(review.permaId, (err, comments) => {
         if (err) {
           callback(err, null, null);
         } else {
           comments.forEach(comment => {
             if (!comment.draft && !comment.deleted) {
-              newReview.hasDefects |= comment.defectRaised && !comment.defectApproved;
+              review.hasDefects |= comment.defectRaised && !comment.defectApproved;
             }
           });
 
-          getReviewers(newReview.permaId, (err, reviewers) => {
+          getReviewers(review.permaId, (err, reviewers) => {
             if (err) {
               callback(err, null, null);
             } else {
@@ -265,18 +274,18 @@ function upsertClosedReview(newReview, callback) {
                   timeSpent: reviewer.timeSpent ? reviewer.timeSpent : 0
                 }
 
-                newReview.isComplete &= newReviewer.completed;
-                newReview.reviewers.push(newReviewer);
+                review.isComplete &= newReviewer.completed;
+                review.reviewers.push(newReviewer);
               });
 
-              newReview.state = details.state;
-              Review.upsertReview(newReview, (err, success) => {
+              review.state = details.state;
+              Review.upsertReview(review, (err, success) => {
                 if (err) {
                   callback(err, null, null);
-                } else if (newReview.state === 'Closed') {
-                  callback(null, newReview, null);
+                } else if (review.state === 'Closed') {
+                  callback(null, review, null);
                 } else {
-                  callback(null, null, newReview);
+                  callback(null, null, review);
                 }
               });
             }
@@ -308,9 +317,20 @@ function emitReviewClosed(review) {
   });
 }
 
+function registerReviewAbandonedCallback(callback) {
+  abandonedReviewCallbacks.push(callback);
+}
+
+function emitReviewAbandoned(review) {
+  abandonedReviewCallbacks.forEach(callback => {
+    callback(review);
+  });
+}
+
 module.exports = {
   registerReviewInsertedCallback: registerReviewInsertedCallback,
   registerReviewClosedCallback: registerReviewClosedCallback,
+  registerReviewAbandonedCallback: registerReviewAbandonedCallback,
   pollOpenReviews: function(callback) {
     setTimeout(pollReviews, 1000);
     callback();
