@@ -36,13 +36,17 @@ function reviewCreatedAttachment(review) {
       "value": reviewers,
       "short": false
     }],
+    "footer": "fecru-monitor",
+    "ts": new Date(review.createDate).getTime() / 1000 | 0
+  }, {
+    "fallback": reviewUri,
+    "color": blue,
+    "attachment_type": "default",
     "actions": [{
       "type": "button",
       "text": "Open Review",
       "url": reviewUri
-    }],
-    "footer": "fecru-monitor",
-    "ts": new Date(review.createDate).getTime() / 1000 | 0
+    }]
   }]
 
   return attachments;
