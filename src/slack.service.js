@@ -10,6 +10,11 @@ const blue = "#3aa3e3";
 function reviewCreatedAttachment(review) {
   console.log(`review started: ${review.permaId} - ${review.name}`);
 
+  var startTime = new Date(review.createDate).getTime();
+  var endTime = new Date().getTime();
+  var durationMs = endTime - startTime;
+  var durationTime = time.msToTime(durationMs);
+
   var reviewers = '';
   var delimiter = '';
   review.reviewers.forEach(reviewer => {
@@ -30,14 +35,18 @@ function reviewCreatedAttachment(review) {
     "fields": [{
       "title": "Author",
       "value": review.author.displayName,
-      "short": false
+      "short": true
+    }, {
+      "title": "Age",
+      "value": durationTime,
+      "short": true
     }, {
       "title": "Reviewers",
       "value": reviewers,
       "short": false
     }],
     "footer": "fecru-monitor",
-    "ts": new Date(review.createDate).getTime() / 1000 | 0
+    "ts": new Date().getTime() / 1000 | 0
   }, {
     "fallback": reviewUri,
     "color": blue,
@@ -81,7 +90,7 @@ function reviewClosedAttachment(review) {
       "value": review.moderator.displayName,
       "short": true
     }, {
-      "title": "Duration",
+      "title": "Age",
       "value": durationTime,
       "short": true
     }, {
@@ -114,7 +123,7 @@ function reviewAbandonedAttachment(review) {
       "value": review.author.displayName,
       "short": true
     }, {
-      "title": "Duration",
+      "title": "Age",
       "value": durationTime,
       "short": true
     }],
