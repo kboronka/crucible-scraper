@@ -7,6 +7,7 @@ const red = "#b72834";
 
 function reviewCreatedAttachment(review) {
   console.log(`review started: ${review.permaId} - ${review.name}`);
+  console.log();
 
   var reviewers = '';
   var delimiter = '';
@@ -38,6 +39,7 @@ function reviewCreatedAttachment(review) {
 
 function reviewClosedAttachment(review) {
   console.log(`review closed: ${review.permaId} - ${review.name}`);
+  console.log();
 
   var startTime = new Date(review.createDate).getTime();
   var endTime = new Date().getTime();
@@ -82,6 +84,7 @@ function reviewClosedAttachment(review) {
 
 function reviewAbandonedAttachment(review) {
   console.log(`review abandoned: ${review.permaId} - ${review.name}`);
+  console.log();
 
   var startTime = new Date(review.createDate).getTime();
   var endTime = new Date().getTime();
