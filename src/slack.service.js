@@ -2,6 +2,8 @@ import axios from 'axios';
 import settings from './config/config';
 import time from './format-time';
 
+const green = "#2eb886";
+const red = "#b72834";
 
 function reviewCreatedAttachment(review) {
   console.log(`review started: ${review.permaId} - ${review.name}`);
@@ -15,7 +17,7 @@ function reviewCreatedAttachment(review) {
 
   var attachment = [{
     "fallback": `Review Started: ${review.permaId} - ${review.name}`,
-    "color": "#b72834",
+    "color": green,
     "title": "Review Started",
     "text": `${review.name}`,
     "fields": [{
@@ -51,7 +53,7 @@ function reviewClosedAttachment(review) {
 
   var attachment = [{
     "fallback": `Review Closed: ${review.permaId} - ${review.name}`,
-    "color": "#b72834",
+    "color": green,
     "title": "Review Closed",
     "text": `${review.permaId} - ${review.name}`,
     "fields": [{
@@ -85,12 +87,9 @@ function reviewCreated(review) {
   };
 
   axios.post(uri, body)
-    .then(function(res) {
-      //callback(null, res.data);
-    })
+    .then(function(res) {})
     .catch(function(err) {
       console.log(err.message);
-      //callback(err.message, null);
     });
 }
 
@@ -105,14 +104,12 @@ function reviewClosed(review) {
   };
 
   axios.post(uri, body)
-    .then(function(res) {
-      // callback(null, res.data);
-    })
+    .then(function(res) {})
     .catch(function(err) {
       console.log(err.message);
-      // callback(err.message, null);
     });
 }
+
 module.exports = {
   reviewCreated: reviewCreated,
   reviewClosed: reviewClosed
