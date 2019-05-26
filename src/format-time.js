@@ -2,6 +2,11 @@ function msToTime(duration) {
   var seconds = duration / 1000;
   var minutes = seconds / 60;
   var hours = minutes / 60;
+  var days = hours / 24;
+
+  if (days > 1) {
+    return round(days, 1).toString() + 'd';
+  }
 
   if (hours > 1) {
     return round(hours, 1).toString() + 'h';
