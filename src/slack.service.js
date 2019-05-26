@@ -30,7 +30,7 @@ function reviewCreatedAttachment(review) {
       "value": reviewers,
       "short": false
     }],
-    "footer": "fecru-scraper",
+    "footer": "fecru-monitor",
     "ts": new Date(review.createDate).getTime() / 1000 | 0
   }];
 
@@ -75,7 +75,7 @@ function reviewClosedAttachment(review) {
       "value": reviewers,
       "short": false
     }],
-    "footer": "fecru-scraper",
+    "footer": "fecru-monitor",
     "ts": new Date().getTime() / 1000 | 0
   }];
 
@@ -105,7 +105,7 @@ function reviewAbandonedAttachment(review) {
       "value": durationTime,
       "short": true
     }],
-    "footer": "fecru-scraper",
+    "footer": "fecru-monitor",
     "ts": new Date().getTime() / 1000 | 0
   }];
 
