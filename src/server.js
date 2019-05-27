@@ -4,9 +4,11 @@ import mongoose from 'mongoose';
 import createError from 'http-errors';
 import fecru from "./fecru.service";
 import slack from "./slack.service";
+import jira from "./jira.service";
 
 import reviewsRouter from './routes/reviews.route';
 import config from './config/config';
+import { settings } from 'cluster';
 
 // database connection
 mongoose.connect(config.database, {
@@ -30,6 +32,7 @@ connection.once('error', (err) => {
 function reviewCreated(review) {
   console.log(`\n\n!! new review !! ${review.permaId}`)
   slack.reviewCreated(review);
+  jira.transitionIssueToCodeReview(review.jiraIssueKey);
 }
 
 function reviewClosed(review) {
