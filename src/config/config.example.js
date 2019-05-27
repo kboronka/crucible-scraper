@@ -9,5 +9,6 @@ module.exports = {
   username: process.env.FECRU_API_USER || 'user',
   password: process.env.FECRU_API_PASSWORD || 'password',
   slackUrl: process.env.SLACK_WEBHOOK_URL || 'http://slack.com/webhook',
-  jiraUrl: process.env.JIRA_URL || 'https://jira.com/'
+  jiraUrl: process.env.JIRA_URL || 'https://jira.com/',
+  jiraTransitionUrl: process.env.JIRA_TRANSITION_WEBHOOK || 'https://jira.com/'
 }
