@@ -206,30 +206,37 @@ function upsertOpenReview(review, callback) {
     reviewers: []
   }
 
-  getComments(newReview.permaId, (err, comments) => {
+  getDetails(newReview.permaId, (err, details) => {
     if (err) {
       callback(err, null, null);
     } else {
-      comments.forEach(comment => {
-        if (!comment.draft && !comment.deleted) {
-          newReview.hasDefects |= comment.defectRaised && !comment.defectApproved;
-        }
-      });
-
-      getReviewers(newReview.permaId, (err, reviewers) => {
+      // console.log(JSON.stringify(details));
+      getComments(newReview.permaId, (err, comments) => {
         if (err) {
           callback(err, null, null);
         } else {
-          updateReviewers(newReview, reviewers);
+          comments.forEach(comment => {
+            if (!comment.draft && !comment.deleted) {
+              newReview.hasDefects |= comment.defectRaised && !comment.defectApproved;
+            }
+          });
 
-          newReview.isComplete = newReview.reviewers.every(r => r.completed);
-          Review.upsertReview(newReview, (err, success) => {
+          getReviewers(newReview.permaId, (err, reviewers) => {
             if (err) {
               callback(err, null, null);
-            } else if (success.nModified == 0 && success.upserted) {
-              callback(null, newReview, null);
             } else {
-              callback(null, null, newReview);
+              updateReviewers(newReview, reviewers);
+
+              newReview.isComplete = newReview.reviewers.every(r => r.completed);
+              Review.upsertReview(newReview, (err, success) => {
+                if (err) {
+                  callback(err, null, null);
+                } else if (success.nModified == 0 && success.upserted) {
+                  callback(null, newReview, null);
+                } else {
+                  callback(null, null, newReview);
+                }
+              });
             }
           });
         }
