@@ -189,14 +189,14 @@ function upsertOpenReview(review, callback) {
       avatarUrl: review.creator.avatarUrl,
     },
     author: {
-      userName: review.creator.userName,
-      displayName: review.creator.displayName,
-      avatarUrl: review.creator.avatarUrl,
+      userName: review.author.userName,
+      displayName: review.author.displayName,
+      avatarUrl: review.author.avatarUrl,
     },
     moderator: {
-      userName: review.creator.userName,
-      displayName: review.creator.displayName,
-      avatarUrl: review.creator.avatarUrl,
+      userName: review.moderator.userName,
+      displayName: review.moderator.displayName,
+      avatarUrl: review.moderator.avatarUrl,
     },
     createDate: review.createDate,
     dueDate: review.dueDate,
@@ -261,6 +261,12 @@ function upsertClosedReview(review, callback) {
 
               review.isComplete = review.reviewers.every(r => r.completed);
               review.state = details.state;
+              review.moderator = {
+                userName: details.moderator.userName,
+                displayName: details.moderator.displayName,
+                avatarUrl: details.moderator.avatarUrl,
+              };
+
               Review.upsertReview(review, (err, success) => {
                 if (err) {
                   callback(err, null, null);
