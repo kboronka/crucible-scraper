@@ -37,12 +37,12 @@ function reviewCreated(review) {
 
 function reviewClosed(review) {
   console.log(`\n\n!! review closed !! ${review.permaId}`)
-  slack.reviewClosed(review);
+  //slack.reviewClosed(review);
 }
 
 function reviewAbandoned(review) {
   console.log(`\n\n!! review abandoned !! ${review.permaId}`)
-  slack.reviewAbandoned(review);
+  //slack.reviewAbandoned(review);
 }
 
 // express
