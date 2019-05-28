@@ -261,6 +261,8 @@ function upsertClosedReview(review, callback) {
 
               review.isComplete = review.reviewers.every(r => r.completed);
               review.state = details.state;
+
+              // sometimes moderator is changed last minute
               review.moderator = {
                 userName: details.moderator.userName,
                 displayName: details.moderator.displayName,
