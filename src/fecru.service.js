@@ -1,4 +1,5 @@
 import axios from 'axios';
+import https from 'https';
 import urljoin from 'url-join';
 import settings from './config/config';
 import Review from './models/review.model';
@@ -6,6 +7,12 @@ import Review from './models/review.model';
 var newReviewCallbacks = [];
 var closedReviewCallbacks = [];
 var abandonedReviewCallbacks = [];
+
+const instance = axios.create({
+  httpsAgent: new https.Agent({  
+    rejectUnauthorized: false
+  })
+});
 
 function pollReviews() {
   const timeoutAfterError = 15 * 60 * 1000; // 15 minutes
@@ -87,7 +94,7 @@ function getOpenReviews(callback) {
     }
   };
 
-  axios.get(uri, config)
+  instance.get(uri, config)
     .then((res) => {
       if (res.data && res.data.reviewData) {
         var reviews = res.data.reviewData.filter(r =>
@@ -111,7 +118,7 @@ function getDetails(id, callback) {
     }
   };
 
-  axios.get(uri, config)
+  instance.get(uri, config)
     .then((res) => {
       if (res.data && res.data) {
         callback(null, res.data);
@@ -132,7 +139,7 @@ function getReviewers(id, callback) {
     }
   };
 
-  axios.get(uri, config)
+  instance.get(uri, config)
     .then((res) => {
       if (res.data && res.data.reviewer) {
         callback(null, res.data.reviewer);
@@ -153,7 +160,7 @@ function getComments(id, callback) {
     }
   };
 
-  axios.get(uri, config)
+  instance.get(uri, config)
     .then((res) => {
       if (res.data && res.data.comments) {
         callback(null, res.data.comments);

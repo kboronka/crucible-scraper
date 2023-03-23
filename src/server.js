@@ -8,6 +8,7 @@ import jira from "./jira.service";
 
 import reviewsRouter from './routes/reviews.route';
 import config from './config/config';
+import { settings } from 'cluster';
 
 // database connection
 mongoose.connect(config.database, {
@@ -63,5 +64,4 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(config.port, '0.0.0.0', () =>
-  console.log(`listening on port ${config.port}`));
+app.listen(config.port, '0.0.0.0', () => console.log(`listening on port ${config.port}`));
