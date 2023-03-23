@@ -50,6 +50,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use('/projects', reviewsRouter);
 
+// Add the route handler for the root path
+app.get('/', (req, res) => {
+  res.status(200).send('crucible-scraper');
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
